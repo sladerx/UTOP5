@@ -19,7 +19,7 @@ require_once ENGINE_DIR . '/modules/sitelogin.php';
 
 header("Content-type: text/html; charset={$config['charset']}");
 
-$title = "Установка UTOP 5.0";
+$title = "Установка UTOP 5.1";
 
 function RemoveDir($path){
 	if(file_exists($path) && is_dir($path)){

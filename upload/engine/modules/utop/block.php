@@ -3,7 +3,7 @@
 ####################################################
 @copyright		(c) 2013 Nevex Group
 @name			uTop
-@version		5.0
+@version		5.1
 @link			http://nevex.pw/
 ####################################################
 */
@@ -58,4 +58,3 @@ if(preg_match("/^utop\.tpl$/i", $templateName) or preg_match("/^utop_[a-z0-9_\-]
 	} else echo "Параметр {$sortBy} отсутствует в списке вариантов сортировки.";
 } else echo "Недопустимое имя шаблона: <b>{$templateName}</b>";
 
-?>
