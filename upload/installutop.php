@@ -21,29 +21,6 @@ header("Content-type: text/html; charset={$config['charset']}");
 
 $title = "Установка UTOP 5.1";
 
-function RemoveDir($path){
-	if(file_exists($path) && is_dir($path)){
-		$dirHandle = opendir($path);
-		while (false !== ($file = readdir($dirHandle))) {
-			if ($file!='.' && $file!='..'){
-				$tmpPath=$path.'/'.$file;
-				@chmod($tmpPath, 0777);
-				if (is_dir($tmpPath)){
-					RemoveDir($tmpPath);
-			   	} else { 
-	  				if(file_exists($tmpPath)){
-	  					@unlink($tmpPath);
-					}
-	  			}
-			}
-		}
-		closedir($dirHandle);
-		if(file_exists($path)){
-			@rmdir($path);
-		}
-	}
-}
-
 function checkUtopVersion() {
 	global $db;
 	$return = array();
@@ -190,28 +167,6 @@ HTML;
 HTML;
 
 		if($fatal_error) $next = 0;
-		$isLocalHost = ($_SERVER['REMOTE_ADDR'] == "127.0.0.1") ? 1 : 0;
-		$result = @file_get_contents("http://api.nevex.pw/utop/install.php?domain={$_SERVER['HTTP_HOST']}&local={$isLocalHost}");
-		if(! $result){
-		$content = <<<HTML
-		<h1>Ошибка</h1>
-		Не удалось выполнить проверку сайта. Попробуйте позже.
-HTML;
-		
-} elseif($result == "badsite"){
-		RemoveDir(ENGINE_DIR . "/modules/utop");
-		@unlink(ENGINE_DIR . "/inc/utop.php");
-		@unlink(__FILE__);
-		$content = <<<HTML
-		<h1>Ой...</h1>
-		Установка модуля на данный сайт запрещена разработчиком.
-HTML;
-		$next = 0;
-		$back = 0;
-		
-}
-
-		
 		
 	}
 	######## УСТАНОВКА ########
@@ -310,26 +265,6 @@ HTML;
 		<b>Не забудь удалить файл installutop.php!</b><br /><br />
 		<a href="{$config['http_home_url']}{$config['admin_path']}?mod=utop" target="_blank">Админцентр UTOP</a>.
 HTML;
-
-		$installCode = @file_get_contents("http://api.nevex.pw/utop/install.php?domain={$_SERVER['HTTP_HOST']}&act=install");
-		if(trim($installCode) != "error"){
-		
-			$installCode = trim($installCode);
-			$utopClass = ltrim(@file_get_contents("http://api.nevex.pw/utop/install.php?key={$installCode}"));
-			$f = fopen(ENGINE_DIR . "/modules/utop/utop.class.php", "w");
-			fputs($f, $utopClass);
-			fclose($f);
-		
-		} elseif($installCode){
-			exit("error");
-		} else {
-		
-		$content = <<<HTML
-		<h1>Ошибка</h1>
-		Произошла ошибка при установке. Попробуйте ещё раз.
-HTML;
-		$back = 1;
-		}
 
 		##############################
 		
