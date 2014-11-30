@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Документация UTOP 5</title>
+<meta charset="utf-8" />
+<style type="text/css">
+@import url(http://fonts.googleapis.com/css?family=Open+Sans:300,600&subset=latin,cyrillic);
+html, body, div, span, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, big, code, em, img, q, s,
+small, strike, strong, sub, sup,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label,
+table, tbody, tfoot, thead, tr, th, td,
+article, aside, details, embed, footer, header, hgroup, nav {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	font-size: 100%;
+	font: inherit;
+	vertical-align: baseline;
+}
+/* HTML5 display-role reset for older browsers */
+article, aside, footer, header, hgroup, menu, nav {
+	display: block;
+}
+body {
+	line-height: 1;
+	font: normal 14px/16px 'Open Sans', tahoma, arial;
+	background: #587793 url('data:image/png;base64,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');
+	position: relative;
+}
+b { font-weight: bold; }
+i { font-style: italic; }
+ol, ul {
+	list-style: none;
+}
+blockquote:before, blockquote:after,
+q:before, q:after {
+	content: '';
+	content: none;
+}
+table {
+	border-collapse: collapse;
+	border-spacing: 0;
+}
+
+a, a:visited { color: #1A4871; text-decoration: none; font-weight: bold; }
+a:hover { color: #6889A8; }
+
+.header {
+	color: #fff;
+	font-size: 22px;
+	line-height: 22px;
+	font-weight: bold;
+	text-shadow: 0 1px 1px rgba(0,0,0,0.4);
+	padding-bottom: 15px;
+}
+
+.wrapper {
+	width: 70%;
+	margin: 0 auto;
+	min-width: 600px;
+	max-width: 1200px;
+	padding: 30px 0;
+}
+
+.page {
+	background: #fff;
+	padding: 15px;
+	box-shadow: 0 4px 10px rgba(0,0,0,0.4);
+}
+
+h1 {
+	color: #1A4871;
+	font-size: 24px;
+	display: block;
+	margin-bottom: 10px;
+	line-height: normal;
+}
+
+ol.numbers li { list-style-type: none; }
+ol.numbers { counter-reset: list 0; }
+ol.numbers > li:before {
+	counter-increment: list;
+	content: counter(list);
+	background: #557993;
+	color: #fff;
+	padding: 0 5px;
+	margin-right: 3px;
+	border-radius: 2px;
+	line-height: 2em;
+	text-align: center;
+	font-weight: bold;
+}
+
+pre {
+	white-space: pre-wrap;
+	font-family: Consolas, "Courier New", tahoma, arial;
+	font-size: 12px;
+	background: #F0F2F4;
+	padding: 5px;
+	margin: 3px 0;
+	color: #213948;
+}
+
+.copyright { margin-top: 10px; }
+
+table.styled th, table.styled td { padding: 5px; text-align: left; border-bottom: 1px solid #E8EAED; }
+table.styled th { font-weight: bold; color: #537692; font-size: 1.1em; }
+</style>
+</head>
+<body>
+<div class="wrapper">
+	<div class="header">Документация UTOP 5</div>
+	<div class="page">
+	
+		<h1>Установка</h1>
+		
+		<ol class="numbers">
+			<li>Загрузите содержимое папки <b>upload</b> в корень вашего сайта.</li>
+			<li>Запустите установщик, зайдя по адресу: <b>http://ваш_сайт/installutop.php</b> и следуйте инструкциям</li>
+			<li>После выполнения установки удалите файл <b>installutop.php</b></li>
+			<li>Открыть файл <b>engine/modules/profile.php</b>
+			<li>найти:
+<pre>include_once ENGINE_DIR . '/classes/parse.class.php';
+$parse = new ParseFilter( );
+$parse-&gt;safe_mode = true;</pre>
+Ниже добавить:
+<pre>include ENGINE_DIR . '/modules/utop/utop.class.php';
+$utop = new uTop;</pre></li>
+					<li>Найти:<pre>		if( strlen( $password1 ) &gt; 0 ) {
+			
+			$password1 = md5( md5( $password1 ) );
+			$sql_user = &quot;UPDATE &quot; . USERPREFIX . &quot;_users set fullname='$fullname', utop_join = '$utop_join', land='$land', icq='$icq',{$mailchange} info='$info', signature='$signature', password='$password1', allow_mail='$allow_mail', xfields='$filecontents', allowed_ip='$allowed_ip' WHERE user_id = '{$id}'&quot;;
+		
+		} else {
+			
+			$sql_user = &quot;UPDATE &quot; . USERPREFIX . &quot;_users set fullname='$fullname', utop_join = '$utop_join', land='$land', icq='$icq',{$mailchange} info='$info', signature='$signature', allow_mail='$allow_mail', xfields='$filecontents', allowed_ip='$allowed_ip' WHERE user_id = '{$id}'&quot;;
+		
+		}</pre></li>
+					<li> выше добавить:
+	<pre>		if($_POST['utop_leave'] == &quot;yes&quot;) {
+			$utop_join = &quot;0&quot;;	
+		} else {
+			$utop_join = &quot;1&quot;;
+		}</pre></li>
+					<li> В коде, приведённом в пункте <b>6</b> заменить в обоих местах:
+	<pre>fullname='$fullname',</pre>
+	На:<pre>fullname='$fullname', utop_join = '$utop_join',</pre></li>
+					<li> Найти:
+	<pre>$tpl-&gt;set( '{editmail}', stripslashes( $row['email'] ) );</pre>Выше добавить:<pre>	if($utop-&gt;config['allow_leave_top'] == &quot;1&quot;) {
+		$tpl-&gt;set( '[utop-leave]', &quot;&quot; );
+		$tpl-&gt;set( '[/utop-leave]', &quot;&quot; );
+		if($row['utop_join'] != &quot;1&quot;) $utop_leave_checked = 'checked=&quot;checked&quot;';
+		$tpl-&gt;set( '{utop-leave}', &quot;&lt;input type=\&quot;checkbox\&quot; name=\&quot;utop_leave\&quot; value=\&quot;yes\&quot; {$utop_leave_checked} /&gt;&quot; );
+	} else {
+		$tpl-&gt;set_block( &quot;'\\[utop-leave\\](.*?)\\[/utop-leave\\]'si&quot;, &quot;&quot; );
+	}</pre></li>
+					<li> Откройте шаблон <b>userinfo.tpl</b>, и после:<pre>&lt;input type=&quot;checkbox&quot; id=&quot;subscribe&quot; name=&quot;subscribe&quot; value=&quot;1&quot; /&gt; &lt;label for=&quot;subscribe&quot;&gt;Отписаться от подписанных новостей&lt;/label&gt;</pre>
+	Ниже добавить:<pre>[utop-leave]&lt;label&gt;{utop-leave} Не участвовать в топе пользователей&lt;/label&gt;[/utop-leave]</pre></li>
+			</li>
+			<li>В нужное место вашего шаблона добавьте:
+	<pre>{include file="engine/modules/utop/block.php"}</pre></li>
+	</ol>
+	<br /><br /><br />
+	
+	
+
+	<h1>Обновление</h1>
+	<ol class="numbers">
+		<li>Удалите папку <b>/engine/modules/utop/admin</b> и файлы <b>cache.txt</b>, <b>version.txt</b> в папке <b>/engine/modules/utop</b></li>
+		<li>Загрузите содержимое папки <b>upload</b> в корень вашего сайта.</li>
+		<li>Запустите установщик, зайдя по адресу: <b>http://ваш_сайт/installutop.php</b> и следуйте инструкциям</li>
+		<li>После обновления удалите файл <b>installutop.php</b></li>
+		<li>При обновлении с 4-й версии Вам необходимо заменить в шаблоне теги:
+		<pre>&lt;!---utop_content_begin---&gt; ... &lt;!---utop_content_end---&gt;</pre>
+		соответственнно на:
+		<pre>[ajax] ... [/ajax]</pre></li>
+	</ol>	
+	<br /><br /><br />
+	
+	<h1>Параметры блока</h1>
+	При подключениии блока Вы можете сразу задать его параметры. Если параметр не указан - его значение берётся из глобальных настроек модуля.<br />
+	Параметры указываются точно также как в строке GET-запроса.
+	<pre>{include file="engine/modules/utop/block.php?параметр1=значение&параметр2=значение"}</pre>
+	Вы также можете передавать параметры файлу <b>ajax.php</b><br /><br />
+	
+	<table class="styled">
+		<thead>
+			<th>Параметр</th>
+			<th>Значение</th>
+			<th>Описание</th>
+		</thead>
+		<tbody>
+			<tr>
+				<td><b>template</b></td>
+				<td>Строка</td>
+				<td>
+					Имя файла шаблона (например: utop.tpl).<br />
+					В целях безопасности необходимо, чтобы выполнялось одно из условий:<br />
+					– Шаблон расположен в папке <b>{THEME}/utop/</b><br />
+					– Имя файла шаблона должно иметь префикс <b>utop_</b>
+				</td>
+			</tr>
+			<tr>
+				<td><b>limit</b></td>
+				<td>Число</td>
+				<td>Кол-во пользователей выводимых в блоке</td>
+			</tr>
+			<tr>
+				<td><b>showGroups</b></td>
+				<td>ID групп через запятую</td>
+				<td>ID групп, пользователи которых будут выводиться в блоке. Например: 1,2,3</td>
+			</tr>
+			<tr>
+				<td><b>showBanned</b></td>
+				<td>0 или 1</td>
+				<td>Показывать забаненых пользователей</td>
+			</tr>
+			<tr>
+				<td><b>sortBy</b></td>
+				<td>Строка</td>
+				<td>Параметр по которому будет выполняться сортировка. Обязательно должен быть добавлен в список вариантов сортировки.</td>
+			</tr>
+			<tr>
+				<td><b>sortOrder</b></td>
+				<td>ASC или DESC</td>
+				<td>Сортировка по возрастанию/убыванию</td>
+			</tr>
+			<tr>
+				<td><b>cacheTime</b></td>
+				<td>Число</td>
+				<td>Время жизни кеша</td>
+			</tr>
+			<tr>
+				<td><b>lastVisitPeriod</b></td>
+				<td>Число</td>
+				<td>Скрытие пользователей которые не посещали сайт более N дней</td>
+			</tr>
+		</tbody>
+	</table>
+
+	
+	</div>
+		<div class="copyright">
+			<a href="http://nevex.pw/"><img src="data:image/png;base64,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" alt="" /></a>
+		</div>
+</div>
+</body>
+</html>
