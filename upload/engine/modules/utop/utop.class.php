@@ -12,10 +12,26 @@ if(!defined('DATALIFEENGINE')) exit();
 
 class uTop {
 
+	/** 
+	 * @var array Массив с ID скрытх пользователей
+	 */
 	private $hiddenUsers;
+	
+	/**
+	 * @var array Конфиг модуля
+	 */
 	public $config;
+	
+	/**
+	 * @var db База данных DLE
+	 */
 	private $db;
+	
 	private $dle_config;
+	
+	/** 
+	 * @var nCache Работа с кешированием 
+	 */
 	public $cache;
 	
 	function __construct() {
@@ -36,6 +52,11 @@ class uTop {
 		$this->hiddenUsers = $hiddenUsersArr;
 	}
 	
+	/**
+	 * Парсинг текстового поля "варианты сортировок"
+	 * @param string $sorlList Варианты сортировки
+	 * @return array Массив с вариантами сортировки
+	 */
 	public static function parseSortList($sorlList) {
 		$options_list = explode("\n", $sorlList);
 		$options_result = array();
@@ -50,6 +71,12 @@ class uTop {
 		}
 		return $options_result;
 	}
+	
+	/**
+	 * Противополжна функции parseSortList() (массив -> список)
+	 * @param array $sorlList Массив с вариантами сортировки
+	 * @return string Список вариантов сортировки
+	 */
 	public static function showSortList(array $sorlList) {
 		$options_result = array();
 		foreach ($sorlList as $key => $value) {
@@ -58,6 +85,11 @@ class uTop {
 		return implode("\n", $options_result);
 	}
 	
+	/**
+	 * Парсинг сохранённых значений доп. полей
+	 * @param string $xfields Данные (поле "xfields" таблицы "dle_users")
+	 * @return array Массив со значениями доп. полей
+	 */
 	public static function parseXfields($xfields) {
 		if( $xfields == "" ) return;
 		$xfieldsdata = explode( "||", $xfields );
@@ -73,6 +105,12 @@ class uTop {
 		return $data;
 	}
 	
+	/**
+	 * Формирует параметры для WHERE части SQL-запроса
+	 * @param array $showGroups Массив с ID групп пользователей, которые будут выводиться. Если массив пуст, то фильтрации по группам нет.
+	 * @param boolean $showBanned Показывать забаненых пользователей?
+	 * @param int $lastVisitPeriod Искать пользователей, которые посещали сайт за последние $lastVisitPeriod дней. Значение 0 - отключить фильтр.
+	 */
 	private function sqlFilters($showGroups, $showBanned, $lastVisitPeriod) {
 		$sql_filters = array();
 		$lastVisitPeriod = $lastVisitPeriod ? intval($lastVisitPeriod) : intval($this->config['last_visit_period']);
@@ -102,7 +140,7 @@ class uTop {
 		}
 		
 		// фильтр забаненых
-		if(! $showBanned) $sql_filters[] = "`banned` != 'yes'";
+		if(!$showBanned) $sql_filters[] = "`banned` != 'yes'";
 
 		// те, кто не посещал сайт более n дней
 		if($lastVisitPeriod > 0){
@@ -119,6 +157,11 @@ class uTop {
 		
 	}
 	
+	/**
+	 * Форматирование даты и времени из UNIX timestamp
+	 * @param string $date_format Формат (аналогичен тому, что используется в функции date() PHP)
+	 * @param int $date UNIX timestamp
+	 */
 	public function formatDate($date_format, $date) {
 		$day_start = mktime('00', '00', '00', date("m"),  date("d"),  date("Y"));
 		$day_end = mktime('23', '59', '59', date("m"),  date("d"),  date("Y"));
@@ -133,9 +176,21 @@ class uTop {
 		return $return;
 	}
 	
+	/**
+	 * Возвращаем массив с варинтами сортировки из конфига модуля
+	 * @return array Массив с вариантами сортировки
+	 */
 	public function getSortList(){ return $this->config['sort_list']; }
 	
-	// Получаем отсортированный список пользователей из БД
+	/**
+	 * Получение списка пользователей из БД
+	 * @param int $limit Количество выводимых пользователей
+	 * @param array $showGroups Массив с ID групп пользователей которых выводить
+	 * @param boolean $showBanned Показывать забаненых пользователей?
+	 * @param string $sortBy Название поля таблицы по которому выполняется сортировка
+	 * @param string $sortOrder Порядок сортировки: ASC или DESC
+	 * @param int $lastVisitPeriod Скрытие пользователей, которые не посещали сайт более $lastVisitPeriod дней.
+	 */
 	private function loadFromDB($limit, $showGroups, $showBanned, $sortBy, $sortOrder, $lastVisitPeriod) {
 		$sql_where = $this->sqlFilters($showGroups, $showBanned, $lastVisitPeriod);
 		$data = array();
@@ -149,7 +204,16 @@ class uTop {
 		return $data;
 	}
 
-	// Получение массива с пользователями из кеша/БД
+	/**
+	 * Получение массива с пользователями из кеша/БД
+	 * @param int $limit Количество выводимых пользователей
+	 * @param array $showGroups Массив с ID групп пользователей которых выводить
+	 * @param boolean $showBanned Показывать забаненых пользователей?
+	 * @param string $sortBy Название поля таблицы по которому выполняется сортировка
+	 * @param string $sortOrder Порядок сортировки: ASC или DESC
+	 * @param int $cacheTime Время жизни кеша
+	 * @param int $lastVisitPeriod Скрытие пользователей, которые не посещали сайт более $lastVisitPeriod дней.
+	 */
 	public function getData($limit, $showGroups, $showBanned, $sortBy, $sortOrder, $cacheTime, $lastVisitPeriod) {
 		global $user_group;
 		$limit = $limit ? intval($limit) : $this->config['max_user'];
