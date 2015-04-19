@@ -93,13 +93,14 @@ class uTop {
 	public static function parseXfields($xfields) {
 		if( $xfields == "" ) return;
 		$xfieldsdata = explode( "||", $xfields );
+		$data = array(); //Переносим обьявления массива сюда для корректной работы функции
 		foreach ( $xfieldsdata as $xfielddata ) {
 			list ( $xfielddataname, $xfielddatavalue ) = explode( "|", $xfielddata );
 			$xfielddataname = str_replace( "&#124;", "|", $xfielddataname );
 			$xfielddataname = str_replace( "__NEWL__", "\r\n", $xfielddataname );
 			$xfielddatavalue = str_replace( "&#124;", "|", $xfielddatavalue );
 			$xfielddatavalue = str_replace( "__NEWL__", "\r\n", $xfielddatavalue );
-			$data = array();
+			//$data = array(); Каждый раз создает новый массив, поэтому там будет только последние доп. поле профиля
 			$data[$xfielddataname] = $xfielddatavalue;
 		}
 		return $data;
